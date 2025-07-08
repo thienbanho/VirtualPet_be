@@ -1,21 +1,16 @@
 ﻿const mongoose = require("mongoose");
 
-const userSchema = new mongoose.Schema({
-  name: {
+const shelterSchema = new mongoose.Schema({
+  companyName: {
     type: String,
     required: true,
     unique: true,
     trim: true,
   },
-  email: {
+  companyEmail: {
     type: String,
     required: true,
     unique: true,
-    trim: true,
-  },
-  password: {
-    type: String,
-    required: true,
     trim: true,
   },
   phone: {
@@ -28,24 +23,24 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true,
   },
-  role: {
+  business_license: {
     type: String,
-    enum: ["adopters", "admin", "shelter_manager", "shelter_staff"],
-    default: "adopters",
+    required: true,
+    trim: true,
   },
-  shelter_id: {
+  verified: {
+    type: Boolean,
+    default: false,
+  },
+  created_by_userid: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Shelter",
-    default: null,
+    ref: "User",
+    required: true,
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
-  refreshToken: {
-    type: String,
-    default: null,
-  },
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.model("Shelters", shelterSchema);

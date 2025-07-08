@@ -2,6 +2,8 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
+const cookieParser = require("cookie-parser");
+
 const PORT = process.env.PORT || 3005;
 
 const authRoute = require('./app/routes/authRoute'); // Importing the auth route
@@ -9,6 +11,8 @@ const authRoute = require('./app/routes/authRoute'); // Importing the auth route
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(cookieParser());
+
 app.use('/auth', authRoute);
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
