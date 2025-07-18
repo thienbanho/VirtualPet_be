@@ -7,6 +7,7 @@ const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 3005;
 
 const authRoute = require('./app/routes/authRoute'); // Importing the auth route
+const petRoute = require('./app/routes/petRoute'); // Importing the pet route
 
 const app = express();
 app.use(express.json());
@@ -28,7 +29,7 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 app.use('/auth', authRoute);
-
+app.use('/pets', petRoute);
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   console.log('Connected to MongoDB');
 }).catch(err => {
