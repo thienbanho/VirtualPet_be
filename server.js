@@ -1,15 +1,25 @@
 ﻿require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const passport = require('passport');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const cookieParser = require("cookie-parser");
-
+require('./app/services/google');
 const PORT = process.env.PORT || 3005;
 
 const authRoute = require('./app/routes/authRoute'); // Importing the auth route
 const petRoute = require('./app/routes/petRoute'); // Importing the pet route
 
 const app = express();
+app.use(session({
+  secret: process.env.SESSION_SECRET,
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: process.env.NODE_ENV === "production" }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
 app.use(express.json());
 app.use(cookieParser());
 const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
@@ -30,6 +40,7 @@ app.use(cors(corsOptions));
 
 app.use('/auth', authRoute);
 app.use('/pets', petRoute);
+
 mongoose.connect(process.env.MONGODB_URI).then(() => {
   console.log('Connected to MongoDB');
 }).catch(err => {

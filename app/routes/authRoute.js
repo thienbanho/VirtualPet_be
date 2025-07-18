@@ -9,6 +9,9 @@ router.post('/register', authController.register); // Register route
 router.post('/logout', authController.logout); // Logout route
 router.post('/refresh', authController.refresh); // Refresh token route
 
+router.get('/google', authController.googleLogin); // Google login route
+router.get('/google/callback', authController.googleCallback); // Google callback route
+
 router.post('/registerShelter',authMiddleware, roleMiddleware(['shelter_manager']), authController.registerShelter); // Register shelter route
 router.post('/createStaff',authMiddleware, roleMiddleware(['shelter_manager']), authController.createStaff); // Create staff route
 
