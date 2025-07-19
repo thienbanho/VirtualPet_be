@@ -15,23 +15,30 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true,
-    trim: true,
+    required: function () {
+      return !this.googleId;
+    }
   },
   phone: {
     type: String,
-    required: true,
-    trim: true,
+    required: function () {
+      return !this.googleId;
+    }
   },
   address: {
     type: String,
-    required: true,
-    trim: true,
+    required: function () {
+      return !this.googleId;
+    }
   },
   role: {
     type: String,
     enum: ["adopters", "admin", "shelter_manager", "shelter_staff"],
     default: "adopters",
+  },
+  googleId: {
+    type: String,
+    default: null
   },
   shelter_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -46,6 +53,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: null,
   },
+  
 });
 
 module.exports = mongoose.model("User", userSchema);

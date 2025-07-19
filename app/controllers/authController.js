@@ -1,6 +1,7 @@
 ﻿const jwt = require("jsonwebtoken");
 const User = require("../models/users");
 const Shelter = require("../models/shelters");
+const passport = require("passport");
 const {
   loginSchema,
   registerSchema,
@@ -234,4 +235,25 @@ exports.createStaff = async (req, res) => {
     console.error("Shelter staff registration error:", error);
     res.status(500).json({ message: "Internal server error" });
   }
+};
+
+exports.googleLogin = (req, res, next) => {
+  passport.authenticate("google", { scope: ["email", "profile"] })(req, res, next);
+};
+
+exports.googleCallback = (req, res, next) => {
+  passport.authenticate("google", (err, user, info) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.redirect("/login");
+    }
+    req.logIn(user, (err) => {
+      if (err) {
+        return next(err);
+      }
+      return res.redirect("/");
+    });
+  })(req, res, next);
 };
