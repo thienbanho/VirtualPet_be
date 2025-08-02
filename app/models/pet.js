@@ -7,8 +7,8 @@ const petSchema = new mongoose.Schema({
     trim: true,
   },
   type: {
-    type: String,
-    enum: ["Chó", "Mèo", "Chim"],
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "PetType",
     required: true,
   },
   age: {
