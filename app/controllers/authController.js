@@ -55,6 +55,7 @@ exports.login = async (req, res) => {
         accessToken,
         user: { email: user.email, role: user.role },
       });
+      
   } catch (error) {
     console.error("Login error:", error);
     res.status(500).json({ message: "Internal server error" });
@@ -253,7 +254,97 @@ exports.googleCallback = (req, res, next) => {
       if (err) {
         return next(err);
       }
-      return res.redirect("/");
+      return res.redirect("/auth/index");
     });
   })(req, res, next);
+};
+
+exports.index = (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Bạn chưa đăng nhập." });
+  }
+
+  res.status(200).json({
+    message: `Welcome, ${req.user.email || req.user.name || 'user'}!`,
+    user: req.user
+  });
+};
+
+exports.profile = async (req, res) => {
+  if (!req.user) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    console.log("User profile accessed:", user);
+    res.status(200).json({
+    message: `Profile of ${user.email || user.name || 'user'}`,
+    user: {
+      email: user.email,
+      name: user.name,
+      role: user.role,
+      phone: user.phone,
+      address: user.address,
+      shelter_id: user.shelter_id
+    }
+  });
+  } catch (error) {
+    console.error("Profile retrieval error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.updateProfile = async (req, res) => {
+  const { name, phone, address } = req.body;
+
+  if (!req.user || !req.user.userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const user = await User.findById(req.user.userId);
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.name = name || user.name;
+    user.phone = phone || user.phone;
+    user.address = address || user.address;
+
+    await user.save();
+    res.status(200).json({ message: "Profile updated successfully", user });
+  } catch (error) {
+    console.error("Profile update error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+exports.changePassword = async (req, res) => {
+  const { oldPassword, newPassword } = req.body;
+
+  if (!req.user || !req.user.userId) {
+    return res.status(401).json({ message: "Unauthorized" });
+  }
+
+  try {
+    const user = await User.findById(req.user.userId).select("+password");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const isMatch = await doHashValidation(oldPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Old password is incorrect" });
+    }
+
+    user.password = await doHash(newPassword, 12);
+    await user.save();
+    res.status(200).json({ message: "Password changed successfully" });
+  } catch (error) {
+    console.error("Change password error:", error);
+    res.status(500).json({ message: "Internal server error" });
+  }
 };

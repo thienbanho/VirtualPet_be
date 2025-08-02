@@ -8,7 +8,7 @@ const petSchema = new mongoose.Schema({
   },
   type: {
     type: String,
-    enum: ["dog", "cat", "bird"],
+    enum: ["Chó", "Mèo", "Chim"],
     required: true,
   },
   age: {
@@ -18,7 +18,7 @@ const petSchema = new mongoose.Schema({
   gender: {
     type: String,
     required: true,
-    enum: ["male", "female", "other"],
+    enum: ["Đực", "Cái", "Khác"],
   },
   shelter_id: {
     type: mongoose.Schema.Types.ObjectId,
@@ -27,7 +27,7 @@ const petSchema = new mongoose.Schema({
   status: {
     type: String,
     required: true,
-    enum: ["available", "adopted", "fostered"],
+    enum: ["Có sẵn", "Đã nhận nuôi", "Đang nuôi dưỡng"],
   },
   price: {
     type: Number,
@@ -45,8 +45,8 @@ const petSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-  size: { type: String, enum: ["small", "medium", "large"] }, // Kích thước
-  fur: { type: String, enum: ["short", "medium", "long"] },   // Lông
+  size: { type: String, enum: ["Nhỏ", "Vừa", "Lớn"] }, // Kích thước
+  fur: { type: String, enum: ["Ngắn", "Vừa", "Dài"] },   // Lông
   personality: { type: String },
 });
 
