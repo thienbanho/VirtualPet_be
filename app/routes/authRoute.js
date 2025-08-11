@@ -9,8 +9,8 @@ router.post('/register', authController.register); // Register route
 router.post('/logout', authController.logout); // Logout route
 router.post('/refresh', authController.refresh); // Refresh token route
 router.get('/profile', authMiddleware, authController.profile); // Profile route
-router.post('/updateProfile', authMiddleware, authController.updateProfile); // Update profile route
-router.post('/changePassword', authMiddleware, authController.changePassword); // Change password route
+router.put('/updateProfile', authMiddleware, authController.updateProfile); // Update profile route
+router.put('/changePassword', authMiddleware, authController.changePassword); // Change password route
 
 
 router.get('/google', authController.googleLogin); // Google login route

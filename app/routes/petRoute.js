@@ -4,6 +4,7 @@ const petTypeController = require('../controllers/petTypeController');
 const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware'); 
 const router = express.Router();
 
+
 router.post('/', authMiddleware, roleMiddleware(['shelter_manager', 'shelter_staff']), petController.createPet);
 router.get('/', petController.getAllPets);
 router.get('/types', petTypeController.getAllPetTypes); // Get all pet types route

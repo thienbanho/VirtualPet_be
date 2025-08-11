@@ -5,11 +5,15 @@ const passport = require('passport');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const cookieParser = require("cookie-parser");
+const swaggerUi = require('swagger-ui-express');
+const swaggerSpec = require('./swagger');
 require('./app/services/google');
 const PORT = process.env.PORT || 3005;
 
 const authRoute = require('./app/routes/authRoute'); // Importing the auth route
 const petRoute = require('./app/routes/petRoute'); // Importing the pet route
+
+
 
 const app = express();
 app.use(session({
@@ -22,6 +26,7 @@ app.use(passport.initialize());
 app.use(passport.session());
 app.use(express.json());
 app.use(cookieParser());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 const allowedOrigins = ['http://localhost:5173', 'http://localhost:3000'];
 
 const corsOptions = {
